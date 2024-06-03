@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background-color: #161616;
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 9%; /* #161616 */
+    --foreground: 0 0% 95%; /* Adjusted for high contrast */
+    --card: 0 0% 13%; /* Slightly lighter than background */
+    --card-foreground: 0 0% 95%;
+    --popover: 0 0% 13%; /* Same as card for consistency */
+    --popover-foreground: 0 0% 95%;
+    --primary: 240 5.9% 60%; /* Brightened for visibility */
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 5.9% 20%; /* Darkened for subtle contrast */
+    --secondary-foreground: 0 0% 95%;
+    --muted: 240 5.9% 20%; /* Similar to secondary */
+    --muted-foreground: 0 0% 80%; /* Muted foreground for readability */
+    --accent: 240 5.9% 30%; /* Accent color for highlights */
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 84.2% 50%; /* Destructive color adjusted */
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 25%; /* Dark border for subtle separation */
+    --input: 0 0% 25%; /* Dark input background */
+    --ring: 240 5.9% 60%; /* Same as primary for focus rings */
+    --radius: 0.5rem; /* Keeping radius same */
+  }
+
+  .dark {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 240 5.9% 10%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 240 4.9% 83.9%;
+  }
+}
