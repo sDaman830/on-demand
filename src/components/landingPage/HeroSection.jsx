@@ -16,9 +16,9 @@ function HeroSection() {
         <Container className={"py-8"}>
             <div className='flex justify-center gap-6 flex-col items-center'>
                 <p className='text-2xl font-semibold bg-gradient-to-r from-[#0066FE] to-[#3BCD92]  text-transparent bg-clip-text'>AI powered Food Safety, consultancy</p>
-                <h1 className='text-5xl font-bold text-white text-center'>Get Optimal Food Recommendations
+                <h1 className='sm:text-5xl text-3xl font-bold text-white sm:text-center'>Get Optimal Food Recommendations
                 </h1>
-                <h2 className='text-2xl text-center w-10/12 font-medium text-gray-400'> Get to know more about the food that suits to your personal needs better
+                <h2 className='text-2xl sm:text-center sm:w-10/12 font-medium text-gray-400'> Get to know more about the food that suits to your personal needs better
                 </h2>
                 {/* <PlaceHolderUI />
 
