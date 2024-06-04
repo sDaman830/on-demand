@@ -1,5 +1,5 @@
 "use client"
-import * as React from "react"
+import { React, useState } from "react"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "../ui/Select"
 import Container from "../BasicLayout/Container"
 import UploadImage from "../BasicLayout/uploadButton"
@@ -8,13 +8,86 @@ import { useRouter } from "next/navigation";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog"
 import CaptureComp from "../ui/Camera"
 import CameraComponent from "../ui/Camera"
+import { MultiStepLoader as Loader } from "../ui/multi-step-loader";
+import Image from "next/image"
+import axios from "axios"
+
+const loadingStates = [
+    {
+        text: "Uploading image",
+    },
+    {
+        text: "Analysing image",
+    },
+    {
+        text: "Getting results",
+    },
+    {
+        text: "Comparing nutrition",
+    },
+    {
+        text: "Understanding data",
+    },
+    {
+        text: "Finding better products",
+    },
+];
 
 
 
 export function SelectDemo() {
+    const [imageUrl, setImageUrl] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [selectedDisease, setSelectedDisease] = useState("");
+    const [data, setData] = useState(null);
 
-    const router = useRouter();
+    // State to store selected disease
+    const [age, setAge] = useState(""); // State to store age
+    const [text, setText] = useState(""); // State to store text input
 
+    const handleDiseaseChange = (event) => {
+        setSelectedDisease(event.target.value); // Update disease state on selection change
+    };
+
+    const handleAgeChange = (event) => {
+        setAge(event.target.value); // Update age state on input change
+    };
+
+    const handleTextChange = (event) => {
+        setText(event.target.value); // Update text state on input change
+    };
+
+
+
+    function handleClick() {
+        if (!age || !selectedDisease || (!text && !imageUrl)) return;
+
+
+
+        const string1 = `I have ${selectedDisease} , My age is ${age} and I want to eat this ${text}. Tell me will this Okay for my body , Give its nutritional content , Recommend some alternative online`;
+
+        const string2 = `I have ${selectedDisease} , My age is ${age} and I am attaching URL of the thing I am eating ${imageUrl}. Tell me will this Okay for my body , Give its nutritional content , Recommend some alternative online`;
+
+        const string = imageUrl ? string2 : string1;
+
+        async function getResponse() {
+            const data = {
+                query: string
+            };
+
+            axios.post('http://127.0.0.1:5000/chat', data)
+                .then(response => {
+                    console.log(response.data); // Handle the response data from the server
+                })
+                .catch(error => {
+                    console.error(error); // Handle any errors that occur during the request
+                });
+        }
+
+        getResponse();
+    }
+
+    console.log(selectedDisease, age, text)
     return (
         <section>
             <Container>
@@ -23,69 +96,21 @@ export function SelectDemo() {
                 <p className="text-center text-xl text-gray-500 mb-12">Enter details to get started</p>
                 <div className="flex flex-col gap-10 justify-center items-center">
                     <div className="grid sm:grid-cols-8 sm:gap-12 items-center grid-cols-1">
-                        <Select >
-                            <SelectTrigger className="sm:col-span-2" >
-                                <SelectValue placeholder="Select a Disease" className="text-white" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectGroup>
-                                    <SelectLabel>Common Diseases</SelectLabel>
-                                    <SelectItem value="type1_diabetes">Type 1 Diabetes</SelectItem>
-                                    <SelectItem value="high_bp">High Blood Pressure (Hypertension)</SelectItem>
-                                    <SelectItem value="asthma">Asthma</SelectItem>
-                                    <SelectItem value="arthritis">Arthritis</SelectItem>
-                                    <SelectItem value="chronic_kidney_disease">Chronic Kidney Disease</SelectItem>
-                                </SelectGroup>
-                                <SelectGroup>
-                                    <SelectLabel>Cardiovascular Diseases</SelectLabel>
-                                    <SelectItem value="coronary_artery_disease">Coronary Artery Disease</SelectItem>
-                                    <SelectItem value="heart_failure">Heart Failure</SelectItem>
-                                    <SelectItem value="stroke">Stroke</SelectItem>
-                                    <SelectItem value="peripheral_artery_disease">Peripheral Artery Disease</SelectItem>
-                                    <SelectItem value="congenital_heart_disease">Congenital Heart Disease</SelectItem>
-                                </SelectGroup>
-                                <SelectGroup>
-                                    <SelectLabel>Respiratory Diseases</SelectLabel>
-                                    <SelectItem value="copd">Chronic Obstructive Pulmonary Disease (COPD)</SelectItem>
-                                    <SelectItem value="lung_cancer">Lung Cancer</SelectItem>
-                                    <SelectItem value="pulmonary_fibrosis">Pulmonary Fibrosis</SelectItem>
-                                    <SelectItem value="sleep_apnea">Sleep Apnea</SelectItem>
-                                    <SelectItem value="bronchiectasis">Bronchiectasis</SelectItem>
-                                </SelectGroup>
-                                <SelectGroup>
-                                    <SelectLabel>Neurological Diseases</SelectLabel>
-                                    <SelectItem value="alzheimer">Alzheimer's Disease</SelectItem>
-                                    <SelectItem value="parkinson">Parkinson's Disease</SelectItem>
-                                    <SelectItem value="multiple_sclerosis">Multiple Sclerosis</SelectItem>
-                                    <SelectItem value="epilepsy">Epilepsy</SelectItem>
-                                    <SelectItem value="migraine">Migraine</SelectItem>
-                                </SelectGroup>
-                                <SelectGroup>
-                                    <SelectLabel>Cancer</SelectLabel>
-                                    <SelectItem value="breast_cancer">Breast Cancer</SelectItem>
-                                    <SelectItem value="prostate_cancer">Prostate Cancer</SelectItem>
-                                    <SelectItem value="colorectal_cancer">Colorectal Cancer</SelectItem>
-                                    <SelectItem value="skin_cancer">Skin Cancer</SelectItem>
-                                    <SelectItem value="leukemia">Leukemia</SelectItem>
-                                </SelectGroup>
-
-                            </SelectContent>
-                        </Select>
-                        <Select>
-                            <SelectTrigger className="sm:col-span-2" >
-                                <SelectValue placeholder="Select your age" className="text-white" />
-                            </SelectTrigger>
-                            <SelectContent>
-
-                            </SelectContent>
-                        </Select>
-                        <div className="sm:col-span-4">
-                            <input placeholder="Tell me what you are eating" className="py-2 mt-5 rounded-md px-2 w-full bg-[#161616] border border-input bg-background text-white" />
+                        <div className="sm:col-span-2" >
+                            <input placeholder="Enter your Diseses" className="py-2 mt-5 rounded-md px-2 w-full bg-[#161616] border border-input bg-background text-white" onChange={handleDiseaseChange} value={selectedDisease} />
                         </div>
+                        <div className="sm:col-span-2" >
+                            <input placeholder="Tell me your Age" className="py-2 mt-5 rounded-md px-2 w-full bg-[#161616] border border-input bg-background text-white" type="number" onChange={handleAgeChange} value={age} />
+                        </div>
+
+                        <div className="sm:col-span-4">
+                            <input placeholder="Tell me what you are eating" className="py-2 mt-5 rounded-md px-2 w-full bg-[#161616] border border-input bg-background text-white" onChange={handleTextChange} value={text} />
+                        </div>
+
                     </div>
 
 
-                    <p className="text-gray-500">OR</p>
+                    <p className="text-gray-500">or you can upload the image Instead of What are you Eating</p>
                     <div className="flex gap-10 items-center sm:flex-row flex-col">
                         <Dialog>
                             <DialogTrigger> <div className="text-gray-500 border border-input rounded-md py-4 px-10 w-[20rem] flex flex-col gap-4 items-center cursor-pointer">
@@ -102,11 +127,23 @@ export function SelectDemo() {
                             </DialogContent>
                         </Dialog>
 
-                        <UploadImage />
+                        <UploadImage setLoading={setLoading} setImageUrl={setImageUrl} setData={setData} selectedDisease={selectedDisease} age={age} />
                     </div>
                 </div>
 
+                <Loader loadingStates={loadingStates} loading={loading} duration={2000} />
+                <div className="flex justify-center items-center"><button className="font-semibold bg-[#005CE8] hover:bg-[#005CE8]/60 transition text-white px-8 py-3 rounded-md text-lg" onClick={handleClick()}>FoodiFy Me</button></div>
 
+
+                {imageUrl && <div className="border border-input px-6 py-4 mt-16 rounded-md">
+
+                    <h1 className="font-semibold text-white text-2xl mb-8">Response</h1>
+                    {/* // Render according top the Data */}
+                    <div className="flex justify-between gap-10">
+                        <div>{data}</div>
+                        <Image src={imageUrl} height={100} width={200} alt="pdoduct" className="rounded-md" />
+                    </div>
+                </div>}
 
             </Container>
         </section>
