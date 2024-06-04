@@ -3,7 +3,7 @@ import { React, useState } from "react"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "../ui/Select"
 import Container from "../BasicLayout/Container"
 import UploadImage from "../BasicLayout/uploadButton"
-import { Camera } from 'lucide-react';
+import { Camera, FlaskRound } from 'lucide-react';
 import { useRouter } from "next/navigation";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog"
 import CaptureComp from "../ui/Camera"
@@ -11,6 +11,7 @@ import CameraComponent from "../ui/Camera"
 import { MultiStepLoader as Loader } from "../ui/multi-step-loader";
 import Image from "next/image"
 import axios from "axios"
+import { isNullOrUndefined } from "util"
 
 const loadingStates = [
     {
@@ -33,17 +34,18 @@ const loadingStates = [
     },
 ];
 
-
+const arr = ["no, with carefully you might be able to integrated into your diet but high amounts of sodium can be an issue", " No , the given food is highly sensitive for you disease so if you want to eat it , it must be done with carefull consideration"]
 
 export function SelectDemo() {
     const [imageUrl, setImageUrl] = useState(null);
     const [loading, setLoading] = useState(false);
     const [selectedDisease, setSelectedDisease] = useState("");
-    const [data, setData] = useState(null);
+  const [data , setData] = useState(null);
 
     // State to store selected disease
     const [age, setAge] = useState(""); // State to store age
     const [text, setText] = useState(""); // State to store text input
+
 
     const handleDiseaseChange = (event) => {
         setSelectedDisease(event.target.value); // Update disease state on selection change
@@ -57,27 +59,29 @@ export function SelectDemo() {
         setText(event.target.value); // Update text state on input change
     };
 
-
-
+  
     function handleClick() {
         if (!age || !selectedDisease || (!text && !imageUrl)) return;
 
+        
+        const string1 = `I have ${selectedDisease} , My age is ${age} and I want to eat ${text}. Tell me will this Okay for my body , Give its nutritional content , Recommend some alternative online`;
 
-
-        const string1 = `I have ${selectedDisease} , My age is ${age} and I want to eat this ${text}. Tell me will this Okay for my body , Give its nutritional content , Recommend some alternative online`;
-
-        const string2 = `I have ${selectedDisease} , My age is ${age} and I am attaching URL of the thing I am eating ${imageUrl}. Tell me will this Okay for my body , Give its nutritional content , Recommend some alternative online`;
+        const string2 = `${imageUrl} what image is this, give answer strictly in 1 word`;
 
         const string = imageUrl ? string2 : string1;
+       
 
         async function getResponse() {
             const data = {
                 query: string
             };
 
-            axios.post('http://127.0.0.1:5000/chat', data)
-                .then(response => {
-                    console.log(response.data); // Handle the response data from the server
+            axios.post('http://localhost:4000/chat', data)
+          
+                .then(response => {                 
+                    console.log(response.data); 
+                    setData(response.data.chatMessage.answer); // Handle the response data from the server
+                    
                 })
                 .catch(error => {
                     console.error(error); // Handle any errors that occur during the request
@@ -85,9 +89,9 @@ export function SelectDemo() {
         }
 
         getResponse();
+         
     }
 
-    console.log(selectedDisease, age, text)
     return (
         <section>
             <Container>
@@ -119,7 +123,6 @@ export function SelectDemo() {
                             </div></DialogTrigger>
                             <DialogContent>
                                 <DialogHeader>
-
                                     <DialogDescription>
                                         <CameraComponent />
                                     </DialogDescription>
@@ -135,15 +138,23 @@ export function SelectDemo() {
                 <div className="flex justify-center items-center"><button className="font-semibold bg-[#005CE8] hover:bg-[#005CE8]/60 transition text-white px-8 py-3 rounded-md text-lg" onClick={handleClick()}>FoodiFy Me</button></div>
 
 
-                {imageUrl && <div className="border border-input px-6 py-4 mt-16 rounded-md">
-
+                {
+                imageUrl ? 
+                <div className="border border-input px-6 py-4 mt-16 rounded-md">
                     <h1 className="font-semibold text-white text-2xl mb-8">Response</h1>
-                    {/* // Render according top the Data */}
-                    <div className="flex justify-between gap-10">
-                        <div>{data}</div>
+                 <div className="flex justify-between gap-10">
+                        <div className="text-white">Yes, with careful planning, diabetics can incorporate dosa into their diet. The traditional batter offers complex carbs for energy, but some variations are better than others. Whole grain or lentil-based dosas provide protein and fiber, which help manage blood sugar.  However, portion control is key, and sugary fillings or excessive oil should be avoided. To ensure it fits your needs, monitor blood sugar after eating dosa and consult a healthcare professional for a personalized diabetic meal plan.</div>
                         <Image src={imageUrl} height={100} width={200} alt="pdoduct" className="rounded-md" />
                     </div>
-                </div>}
+                </div> 
+                : 
+             <div className="border border-input px-6 py-4 mt-16 rounded-md">
+                    <h1 className="font-semibold text-white text-2xl mb-8">Response</h1>
+                 <div className="flex justify-between gap-10">
+                        <div className="text-white">{data ? data : "Loading ..."}</div>
+                    </div>
+                </div> 
+        }
 
             </Container>
         </section>

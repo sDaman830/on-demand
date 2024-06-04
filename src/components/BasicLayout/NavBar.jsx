@@ -11,9 +11,7 @@ function NavBar() {
                     </div>
                     <div className='sm:flex hidden gap-6 text-gray-300 '>
                         <div>Home</div>
-                        <div>Product</div>
-                        <div>Blog</div>
-                        <div>About us</div>
+                        
                     </div>
                 </div>
 

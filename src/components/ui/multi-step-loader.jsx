@@ -72,7 +72,7 @@ const LoaderCore = ({
                         <span
                             className={cn(
                                 "text-white",
-                                value === index && "text-[#2C5364] opacity-100"
+                                value === index && "font-semibold bg-gradient-to-r from-[#0066FE] to-[#3BCD92]  text-transparent bg-clip-text"
                             )}
                         >
                             {loadingState.text}
