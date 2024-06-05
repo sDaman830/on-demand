@@ -4,7 +4,7 @@ import { CloudUpload } from 'lucide-react';
 import React, { useCallback, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 
-export default function UploadImage({ setLoading, setImageUrl, setData, selectedDisease, age }) {
+export default function UploadImage({ setLoading, setImageUrl, setData, selectedDisease, age, setComponentIndex }) {
 
 
     const onDrop = useCallback(acceptedFiles => {
@@ -23,8 +23,7 @@ export default function UploadImage({ setLoading, setImageUrl, setData, selected
                 );
                 const imageURL = response.data.secure_url;
                 setImageUrl(response.data.secure_url);
-
-
+                setComponentIndex((state) => state + 1);
 
                 /// Request to Backend //
                 setData("Hello it is message from Response")
