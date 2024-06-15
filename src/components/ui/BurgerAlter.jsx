@@ -43,7 +43,7 @@ const CameraComponent = () => {
     };
 
     const takePhoto = () => {
-        const width = 300;
+        const width = 420;
         const height = 300;
 
         let video = videoRef.current;
@@ -73,7 +73,7 @@ const CameraComponent = () => {
             {photo && (
                 <div>
                     <h2>Captured Photo:</h2>
-                    <img src={photo} alt="Captured" />
+                    <img src={photo} alt="Captured" className=' aspect-video' />
                 </div>
             )}
             {!hasPhoto && <button onClick={takePhoto}>Capture Photo</button>}

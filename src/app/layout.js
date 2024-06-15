@@ -1,8 +1,11 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
 import NavBar from "@components/components/BasicLayout/NavBar";
-
 const inter = Inter({ subsets: ["latin"] });
+
+import { ToastContainer, toast } from "react-toastify";
+
+import "react-toastify/dist/ReactToastify.css";
 
 export const metadata = {
   title: "Create Next App",
@@ -15,6 +18,7 @@ export default function RootLayout({ children }) {
       <body className={inter.className}>
         <NavBar />
         <main className="flex-1"> {children}</main>
+        <ToastContainer />
       </body>
     </html>
   );

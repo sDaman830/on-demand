@@ -108,7 +108,7 @@ export const MultiStepLoader = ({
         }, duration);
 
         return () => clearTimeout(timeout);
-    }, [currentState, loading, loop, loadingStates.length, duration]);
+    }, [currentState, loading, loop, loadingStates?.length, duration]);
     return (
         <AnimatePresence mode="wait">
             {loading && (

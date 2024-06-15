@@ -3,9 +3,20 @@ import axios from 'axios';
 import { CloudUpload } from 'lucide-react';
 import React, { useCallback, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
+import { toast } from 'react-toastify';
 
-export default function UploadImage({ setLoading, setImageUrl, setData, selectedDisease, age, setComponentIndex }) {
-
+const loadingStates = [
+    {
+        text: "Getting image",
+    },
+    {
+        text: "Uploading to server",
+    },
+    {
+        text: "Analysing image",
+    },
+]
+export default function UploadImage({ setLoading, setImageUrl, setLoadingState }) {
 
     const onDrop = useCallback(acceptedFiles => {
 
@@ -16,17 +27,20 @@ export default function UploadImage({ setLoading, setImageUrl, setData, selected
             formData.append('upload_preset', 'ondemand'); // Replace with your upload preset
 
             try {
+                setLoadingState(loadingStates);
                 setLoading(true);
                 const response = await axios.post(
                     'https://api.cloudinary.com/v1_1/dabeq8yee/image/upload',
                     formData
                 );
                 const imageURL = response.data.secure_url;
+                console.log(imageURL)
+                toast.success("Image Uploaded succussfully", {
+                    hideProgressBar: true,
+                    style: { background: "#2e2e2e", color: "white" },
+                    closeButton: false,
+                })
                 setImageUrl(response.data.secure_url);
-                setComponentIndex((state) => state + 1);
-
-                /// Request to Backend //
-                setData("Hello it is message from Response")
 
             } catch (error) {
                 console.error('Error uploading image:', error);
@@ -49,7 +63,7 @@ export default function UploadImage({ setLoading, setImageUrl, setData, selected
                     <p className='text-center'>Upload the Image to get know whether its for you or not</p>
                 </div>
             </div>
-            {/* <button className='font-semibold bg-[#005CE8] text-white px-8 py-3 mt-6 rounded-md'>
+            {/* <button className='font-semibold  text-white px-8 py-3 mt-6 rounded-md'>
                 Foodify
             </button> */}
 
