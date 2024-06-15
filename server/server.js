@@ -41,9 +41,10 @@ app.post("/chat", async (req, res) => {
 
     const { age, disease, url, food } = req.body;
     let identifiedFood = food;
-
-    if (url) {
+    console.log("URL", url);
+    if (url !== "" || !!url) {
       identifiedFood = await identifyImage(url, apiKey);
+      identifiedFood = identifiedFood.chatMessage.answer;
       if (!identifiedFood) {
         return res
           .status(500)
@@ -51,8 +52,8 @@ app.post("/chat", async (req, res) => {
       }
     }
 
-    const query = `can a person with ${disease}, age ${age} eat ${identifiedFood.chatMessage.answer} give your answer`;
-    const alternativesQuery = `give alternatives to ${identifiedFood.chatMessage.answer} with their shopping url`;
+    const query = `can a person with ${disease}, age ${age} eat ${identifiedFood} give your answer`;
+    const alternativesQuery = `give alternatives to ${identifiedFood} with their shopping url`;
     console.log(query);
     const queryPayload = {
       endpointId: "predefined-openai-gpt4o",
