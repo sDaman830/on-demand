@@ -1,4 +1,5 @@
-async function identifyImage(url) {
+module.exports = identifyImage;
+async function identifyImage(url, apikey) {
   const payload = {
     endpointId: "predefined-openai-gpt4o",
     query: `${url} identify the image in the url in 2-3 words`,
@@ -13,6 +14,7 @@ async function identifyImage(url) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          apikey: apikey,
         },
         body: JSON.stringify(payload),
       }
@@ -31,3 +33,5 @@ async function identifyImage(url) {
 }
 
 // Example usage:
+
+module.exports = identifyImage;

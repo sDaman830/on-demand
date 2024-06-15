@@ -2,7 +2,7 @@ const express = require("express");
 const axios = require("axios");
 const cors = require("cors");
 const bodyParser = require("body-parser");
-import { identifyImage } from "./identifyImage.js";
+const identifyImage = require("./IndentifyImage");
 const app = express();
 const port = process.env.PORT || 4000;
 
@@ -43,7 +43,7 @@ app.post("/chat", async (req, res) => {
     let identifiedFood = food;
 
     if (url) {
-      identifiedFood = await identifyImage(url);
+      identifiedFood = await identifyImage(url, apiKey);
       if (!identifiedFood) {
         return res
           .status(500)
@@ -51,9 +51,9 @@ app.post("/chat", async (req, res) => {
       }
     }
 
-    const query = `can a person with ${disease}, age ${age} eat ${identifiedFood}`;
-    const alternativesQuery = `give alternatives to ${identifiedFood} with their shopping url`;
-
+    const query = `can a person with ${disease}, age ${age} eat ${identifiedFood.chatMessage.answer} give your answer`;
+    const alternativesQuery = `give alternatives to ${identifiedFood.chatMessage.answer} with their shopping url`;
+    console.log(query);
     const queryPayload = {
       endpointId: "predefined-openai-gpt4o",
       query,
@@ -69,11 +69,15 @@ app.post("/chat", async (req, res) => {
 
     const queryUrl = `https://gateway-dev.on-demand.io/chat/v1/sessions/${sessionId}/query`;
 
-    const [queryResponse, alternativesResponse] = await Promise.all([
-      axios.post(queryUrl, queryPayload, { headers }),
-      axios.post(queryUrl, alternativesPayload, { headers }),
-    ]);
+    const queryResponse = await axios.post(queryUrl, queryPayload, { headers });
+    const alternativesResponse = await axios.post(
+      queryUrl,
+      alternativesPayload,
+      { headers }
+    );
 
+    console.log("Query Response:", queryResponse.data);
+    console.log("Alternatives Response:", alternativesResponse.data);
     if (queryResponse.status !== 200 || alternativesResponse.status !== 200) {
       return res
         .status(500)
