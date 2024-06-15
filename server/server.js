@@ -2,7 +2,7 @@ const express = require("express");
 const axios = require("axios");
 const cors = require("cors");
 const bodyParser = require("body-parser");
-
+import { identifyImage } from "./identifyImage.js";
 const app = express();
 const port = process.env.PORT || 4000;
 
@@ -39,32 +39,53 @@ app.post("/chat", async (req, res) => {
       return res.status(500).json({ error: "No session ID received" });
     }
 
-    // Check if the request contains text data
-    const query = req.body.query;
-    if (query) {
-      // Prepare the request body for text query
-      const queryPayload = {
-        endpointId: "predefined-openai-gpt4o",
-        query,
-        pluginIds: ["plugin-1713962163"],
-        responseMode: "sync",
-      };
+    const { age, disease, url, food } = req.body;
+    let identifiedFood = food;
 
-      const queryUrl = `https://gateway-dev.on-demand.io/chat/v1/sessions/${sessionId}/query`;
-      const queryResponse = await axios.post(queryUrl, queryPayload, {
-        headers,
-      });
-
-      if (queryResponse.status !== 200) {
+    if (url) {
+      identifiedFood = await identifyImage(url);
+      if (!identifiedFood) {
         return res
-          .status(queryResponse.status)
-          .json({ error: "Failed to get answer" });
+          .status(500)
+          .json({ error: "Failed to identify food from image URL" });
       }
-
-      res.json(queryResponse.data);
-    } else {
-      res.status(400).json({ error: 'Invalid request. Must include "query"' });
     }
+
+    const query = `can a person with ${disease}, age ${age} eat ${identifiedFood}`;
+    const alternativesQuery = `give alternatives to ${identifiedFood} with their shopping url`;
+
+    const queryPayload = {
+      endpointId: "predefined-openai-gpt4o",
+      query,
+      pluginIds: ["plugin-1713924030", "plugin-1713924030"],
+      responseMode: "sync",
+    };
+
+    const alternativesPayload = {
+      ...queryPayload,
+      query: alternativesQuery,
+      pluginIds: ["plugin-1713924030", "plugin-1716119225"],
+    };
+
+    const queryUrl = `https://gateway-dev.on-demand.io/chat/v1/sessions/${sessionId}/query`;
+
+    const [queryResponse, alternativesResponse] = await Promise.all([
+      axios.post(queryUrl, queryPayload, { headers }),
+      axios.post(queryUrl, alternativesPayload, { headers }),
+    ]);
+
+    if (queryResponse.status !== 200 || alternativesResponse.status !== 200) {
+      return res
+        .status(500)
+        .json({ error: "Failed to get answers from the API" });
+    }
+
+    const response = {
+      foodQueryResponse: queryResponse.data,
+      alternativesResponse: alternativesResponse.data,
+    };
+
+    res.json(response);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal server error" });
