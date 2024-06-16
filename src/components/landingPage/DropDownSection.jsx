@@ -4,15 +4,15 @@ import Container from "../BasicLayout/Container"
 import UploadImage from "../BasicLayout/uploadButton"
 import { Camera } from 'lucide-react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog"
-import CameraComponent from "../ui/BurgerAlter"
+import CameraComponent from "../ui/Camera"
 import { MultiStepLoader as Loader } from "../ui/multi-step-loader";
 import Image from "next/image"
-import DiabetesFriendlyDosaAlternatives from "../ui/DiabitiesDosa"
-import DiabetesFriendlyBurgerAlternatives from "../ui/Burger"
 import { toast } from "react-toastify";
 import { TostStyle } from "@components/libs/constant";
 import axios from "axios";
 import ProductList from "../RendringAlter";
+import Buttont from "../ui/button";
+import Button from "../ui/button";
 const loadingStates = [
     {
         text: "Uploading image",
@@ -34,13 +34,6 @@ const loadingStates = [
     },
 ];
 
-const arr = [{
-    component: <DiabetesFriendlyDosaAlternatives />
-},
-{
-    component: <DiabetesFriendlyBurgerAlternatives />
-}
-]
 
 export function SelectDemo() {
     const [imageUrl, setImageUrl] = useState("");
@@ -48,7 +41,8 @@ export function SelectDemo() {
     const [selectedDisease, setSelectedDisease] = useState("");
     const [data, setData] = useState(null);
     const [curloadingState, setLoadingState] = useState();
-
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [DataPresnt, setDataPresent] = useState(null);
 
     // State to store selected disease
     const [age, setAge] = useState(""); // State to store age
@@ -86,7 +80,12 @@ export function SelectDemo() {
                     setLoadingState(loadingStates);
                     setLoading(true);
                     const res = await axios.post("http://localhost:4000/chat", data);
-                    if (res.status == 200) setData(res.data);
+                    if (res.status == 200) {
+                        if (DataPresnt) {
+                            setData(DataPresnt)
+                        }
+                        else setData(res.data);
+                    }
                 }
                 catch (error) {
                     toast.error(error.message || "Something went wrong Please try again later", TostStyle
@@ -99,6 +98,16 @@ export function SelectDemo() {
         }
     }
 
+    function handleReset() {
+        setAge("");
+        setDataPresent("");
+        setData("")
+        setSelectedDisease("")
+        setImageUrl("");
+        setText("")
+    }
+
+    const isResetActice = age || selectedDisease || imageUrl || text || data;
     return (
         <section>
             <Container>
@@ -113,7 +122,6 @@ export function SelectDemo() {
                         <div className="sm:col-span-2" >
                             <input placeholder="Tell me your Age" className="py-2 mt-5 rounded-md px-2 w-full bg-[#161616] border border-input bg-background text-white" type="number" onChange={handleAgeChange} value={age} />
                         </div>
-
                         <div className="sm:col-span-4">
                             <input placeholder="Tell me what you are eating" className="py-2 mt-5 rounded-md px-2 w-full bg-[#161616] border border-input bg-background text-white" onChange={handleTextChange} value={text} />
                         </div>
@@ -123,26 +131,30 @@ export function SelectDemo() {
 
                     <p className="text-gray-500">You can upload the image Instead of What are you Eating</p>
                     <div className="flex gap-6 items-center sm:flex-row flex-col">
-                        <Dialog>
-                            <DialogTrigger> <div className="text-gray-500 border border-input rounded-md py-4 px-10 w-[20rem] flex flex-col gap-4 items-center cursor-pointer">
+                        <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+                            <DialogTrigger ><div className="text-gray-500 border border-input rounded-md py-4 px-10 w-[20rem] flex flex-col gap-4 items-center cursor-pointer">
                                 <Camera size={72} />
                                 <p className="text-center">Click the photo and get the information right now</p>
                             </div></DialogTrigger>
                             <DialogContent>
                                 <DialogHeader>
                                     <DialogDescription>
-                                        <CameraComponent />
+                                        <CameraComponent setLoading={setLoading} setImageUrl={setImageUrl} setLoadingState={setLoadingState} setIsModalOpen={setIsModalOpen} />
                                     </DialogDescription>
                                 </DialogHeader>
                             </DialogContent>
                         </Dialog>
 
-                        <UploadImage setLoading={setLoading} setImageUrl={setImageUrl} setLoadingState={setLoadingState} />
+                        <UploadImage setLoading={setLoading} setImageUrl={setImageUrl} setLoadingState={setLoadingState} setDataPresent={setDataPresent} />
                     </div>
                 </div>
 
                 <Loader loadingStates={curloadingState} loading={loading} duration={1000} />
-                <div className="flex justify-center items-center"><button className="font-semibold bg-[#005CE8] hover:bg-[#005CE8]/60 transition text-white px-8 py-3 rounded-md text-lg" onClick={handleClick}>FoodiFy Me</button></div>
+                <div className="flex justify-center items-center gap-10">
+
+                    {isResetActice && <Button onClick={handleReset} title="Reset" Variant="outline" />}
+                    <Button onClick={handleClick} title="Foodify Me" />
+                </div>
 
 
                 {(imageUrl || data) && <div className="border border-input px-6 py-4 mt-16 rounded-md  justify-center flex flex-col gap-10 items-center">
@@ -159,6 +171,6 @@ export function SelectDemo() {
 
 
             </Container>
-        </section>
+        </section >
     )
 }

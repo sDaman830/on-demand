@@ -44,7 +44,7 @@ app.post("/chat", async (req, res) => {
     console.log("URL", url);
     if (url !== "" || !!url) {
       identifiedFood = await identifyImage(url, apiKey);
-      identifiedFood = identifiedFood.chatMessage.answer;
+      identifiedFood = identifiedFood?.chatMessage?.answer;
       if (!identifiedFood) {
         return res
           .status(500)

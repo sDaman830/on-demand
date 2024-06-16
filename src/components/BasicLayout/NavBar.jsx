@@ -13,7 +13,7 @@ function NavBar() {
                     Foodify.AI
                 </div>
                 <div className='flex gap-4 '>
-                    <button className='glass 0 px-3 rounded-md text-white block font-medium transition'> <Link href={"https://666023e40a98f0d7e2614686--snazzy-profiterole-3751ff.netlify.app/"}>Docs</Link></button>
+                    <button className='glass 0 px-3 rounded-md text-white block font-medium transition'> <a href="https://666023e40a98f0d7e2614686--snazzy-profiterole-3751ff.netlify.app/" target="_blank" rel="noopener noreferrer">Docs</a></button>
                     <button className='bg-white rounded-md font-medium hover:bg-gray-200 transition'> <LogoutLink>Log out</LogoutLink></button>
                 </div>
             </nav>
