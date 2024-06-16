@@ -5,14 +5,27 @@ const bodyParser = require("body-parser");
 const identifyImage = require("./IndentifyImage");
 const app = express();
 const port = process.env.PORT || 4000;
-
+const { z } = require("zod");
 const apiKey = "Wvcrq40USZEOajv8BI3FvcPL81XzLrtS";
 const externalUserId = "team";
 
 app.use(cors());
 app.use(bodyParser.json());
-
+const requestSchema = z.object({
+  age: z.string(),
+  disease: z.string().nonempty(),
+  url: z.string().optional(),
+  food: z.string().optional(),
+});
 app.post("/chat", async (req, res) => {
+  const validationResult = requestSchema.safeParse(req.body);
+
+  if (!validationResult.success) {
+    return res.status(400).json({ error: validationResult.error.errors });
+  }
+
+  const { age, disease, url, food } = validationResult.data;
+
   try {
     const sessionUrl = "https://gateway-dev.on-demand.io/chat/v1/sessions";
     const headers = {
@@ -39,7 +52,6 @@ app.post("/chat", async (req, res) => {
       return res.status(500).json({ error: "No session ID received" });
     }
 
-    const { age, disease, url, food } = req.body;
     let identifiedFood = food;
     console.log("URL", url);
     if (url !== "" || !!url) {
