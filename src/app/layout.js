@@ -15,9 +15,8 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <NavBar />
-        <main className="flex-1"> {children}</main>
+      <body className={"flex flex-col"}>
+        <main className="flex-1 h-screen"> {children}</main>
         <ToastContainer />
       </body>
     </html>

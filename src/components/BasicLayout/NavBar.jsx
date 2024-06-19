@@ -4,12 +4,14 @@ import React from 'react'
 import Container from './Container'
 import { LogoutLink } from '@kinde-oss/kinde-auth-nextjs'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 function NavBar() {
+    const router = useRouter()
     return (
         <header className='mx-8 py-2'>
             <nav className='font-medium flex justify-between items-center'>
-                <div className='text-white mr-4 sm:text-2xl text-xl font-bold'>
+                <div className='text-white mr-4 sm:text-2xl text-xl font-bold cursor-pointer' onClick={() => router.push("/")}>
                     Foodify.AI
                 </div>
                 <div className='flex gap-4 '>

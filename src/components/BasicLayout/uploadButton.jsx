@@ -37,11 +37,11 @@ export default function UploadImage({ setLoading, setImageUrl, setLoadingState, 
     const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
     return (
-        <div className='flex flex-col items-center text-gray-500'>
-            <div {...getRootProps()} className='cursor-pointer mt-4 border w-[20rem] flex items-center justify-center border-input rounded-md p-4'>
+        <div className='flex flex-col items-center text-gray-500 border-gray-700 '>
+            <div {...getRootProps()} className='cursor-pointer mt-4 border-[0.2px] w-[20rem] transition hover:shadow flex items-center justify-center border-input  rounded-md p-4 border-gray-700 hover:bg-white/5 group'>
                 <input {...getInputProps()} />
                 <div className='flex flex-col items-center gap-4'>
-                    <CloudUpload size={"72"} />
+                    <CloudUpload size={"72"} className='font-light group-hover:text-gray-300 transition' />
                     <p className='text-center'>Upload the Image to get know whether its for you or not</p>
                 </div>
             </div>

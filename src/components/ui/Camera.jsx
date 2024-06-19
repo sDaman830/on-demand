@@ -92,7 +92,7 @@ const CameraComponent = ({
     }
 
     return (
-        <div className="camera-container">
+        <div className="camera-container ">
             {!hasPhoto && <video ref={videoRef} style={{ width: '420px', height: '300px' }}></video>}
             <canvas ref={photoRef} style={{ display: 'none' }}></canvas>
             {photo && (

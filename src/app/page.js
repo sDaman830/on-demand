@@ -1,17 +1,16 @@
+import NavBar from "@components/components/BasicLayout/NavBar";
 import Protected from "@components/components/ProtectedPage";
-import { SelectDemo } from "@components/components/landingPage/DropDownSection";
 import HeroSection from "@components/components/landingPage/HeroSection";
 import Response from "@components/components/landingPage/Response";
+import { motion } from "framer-motion";
 import Image from "next/image";
 
 export default function Home() {
   return (
-    <Protected>
-      <section className=" pb-16">
-        <HeroSection />
-        <SelectDemo />
-        {/* <Response /> */}
-      </section>
-    </Protected>
+    <section className="pb-16 h-screen bg-[#2234ae]/10">
+      <NavBar />
+
+      <HeroSection />
+    </section>
   );
 }
