@@ -22,4 +22,4 @@ jobs:
         run: ssh -o StrictHostKeyChecking=no root@139.84.171.164 'docker pull daman830/foodifyi'
 
       - name: Run Docker Container
-        run: ssh -o StrictHostKeyChecking=no root@139.84.171.164 'docker run -d --name my-container daman830/foodifyi'
+        run: ssh -o StrictHostKeyChecking=no root@<your_server_ip> 'docker run -d --name my-container -p 4000:4000 daman830/foodifyi'
