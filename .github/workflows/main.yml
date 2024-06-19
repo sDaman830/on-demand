@@ -16,7 +16,7 @@ jobs:
       - name: Set up SSH
         uses: webfactory/ssh-agent@v0.5.3
         with:
-          ssh-private-key: SHA256:AMdSoWXcv/S2m8Yc0Bx44tkVpPNCtLLcGETjiH1xqFc
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
       - name: Pull Docker Image
         run: ssh -o StrictHostKeyChecking=no root@139.84.171.164 'docker pull daman830/foodifyi'
