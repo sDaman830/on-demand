@@ -1,8 +1,8 @@
 async function identifyImage(url, apikey) {
   const payload = {
     endpointId: "predefined-openai-gpt4o",
-    query: `${url} identify the image in the url in 2-3 words`,
-    pluginIds: ["plugin-1712327325", "plugin-1713924030"],
+    query: `${url} identify the image in the url in 2-3 words , ignore all the previous chat history and every image url is new`,
+    pluginIds: ["plugin-1713924030"],
     responseMode: "sync",
   };
 
