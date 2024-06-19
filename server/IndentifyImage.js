@@ -1,4 +1,3 @@
-module.exports = identifyImage;
 async function identifyImage(url, apikey) {
   const payload = {
     endpointId: "predefined-openai-gpt4o",
@@ -33,5 +32,7 @@ async function identifyImage(url, apikey) {
 }
 
 // Example usage:
+
+module.exports = identifyImage;
 
 module.exports = identifyImage;
