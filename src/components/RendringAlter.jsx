@@ -1,3 +1,4 @@
+import { ArrowUpRight } from 'lucide-react';
 import React from 'react';
 
 const ProductList = ({ data }) => {
@@ -28,7 +29,7 @@ const ProductList = ({ data }) => {
                         {product?.price && <p className='text-gray-300'><strong className='text-gray-200'>Price   : </strong>{product?.price?.replace("- Price:", "")}</p>}
                         {product?.link && < div className='group flex gap-1 text-blue-600 items-center'>
                             <a href={product?.link} target="_blank" rel="noopener noreferrer" className=' underline '>Product Link </a>
-                            <div className='text-xl -rotate-45  group-hover:rotate-0 transition duration-300'>{"->"}</div>
+                            <div className='group-hover:rotate-45 transition duration-300'><ArrowUpRight size={24} /></div>
                         </div>}
                     </li>
                 ))}

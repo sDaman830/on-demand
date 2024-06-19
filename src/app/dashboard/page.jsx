@@ -15,6 +15,7 @@ import UploadSection from "@components/components/landingPage/UploadSection";
 import Image from "next/image";
 import { toast } from "react-toastify";
 import { TostStyle } from "@components/libs/constant";
+import ProductList from "@components/components/RendringAlter";
 
 
 const loadingStates = [
@@ -114,12 +115,9 @@ function Dashboard() {
                 try {
                     setLoadingState(loadingStates);
                     setLoading(true);
-                    const res = await axios.post("http://localhost:4000/api/chat", data);
+                    const res = await axios.post("http://localhost:4000/app/chat", data);
                     if (res.status == 200) {
-                        if (DataPresnt) {
-                            setData(DataPresnt)
-                        }
-                        else setData(res.data);
+                        setData(res.data);
                     }
                 }
                 catch (error) {
